@@ -90,3 +90,12 @@ double Student::letterToPoints(string letter) const {
 
     return 0.0;
 }
+string Student::showAllCoursesDetails()const{
+    string text;
+    for (const auto& [subName, record] : mainRecords) {
+    text+="<li>" + subName + " : " +
+                gradeletter(record.totalGrade()) + "%</li>";
+    }
+
+    return text;
+}

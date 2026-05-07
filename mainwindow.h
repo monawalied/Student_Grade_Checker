@@ -21,8 +21,19 @@ private slots:
     void on_addBtn_clicked();
     void on_updateGradeBtn_clicked();
 
+    void on_chkBtn_clicked();
+
+    void on_pushButton_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_subAvgBtn_clicked();
+
+    void on_deleteBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     GradeManager manager; // العقل المدبر اللي جواه الـ Map
+    void displayStudentReport(const Student& s);
 };
 #endif // MAINWINDOW_H

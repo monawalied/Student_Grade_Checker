@@ -15,7 +15,7 @@ void GradeManager::addStudent(string name, string id) {
         systemLog.push_back("System: Registered " + name + id);
     }
     else {
-        cout << "Error: Student with ID " << id << " already exists.\n";
+        cout << "Error: Student with ID " << id << " already exists.\n"; // fix
     }
 }
 void GradeManager::deleteStudent(string id) {
@@ -35,10 +35,7 @@ void GradeManager::updateGrade(string id,string course, string comp, double val,
     if (it != mainStorage.end()) {
         Student& currentStudent = it->second; // it->first points to the id , ->next points to the student itself
         currentStudent.updateGradeAux(course, comp,val,admin);
-        cout << "Grade updated for " << id << endl;
         systemLog.push_back( admin+" updated the grade of "+ course+" " + comp +"for "+ id);
-    } else {
-        cout << "Error: Student doesn't exist.\n";
     }
 }
 vector<Student> GradeManager::getTop3Students(){
@@ -74,7 +71,7 @@ string GradeManager::getSubjectAverage(string subject) {
     }
 
     if (totalStudents) average= totalGrades/totalStudents;
-    else  return "None of the students registered for " + subject + " yet";
+    else  return"EMPTY";
     cout<< "Average of "<< subject<<" is ";
     return (avgGradeletter(average));
 

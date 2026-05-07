@@ -45,5 +45,6 @@ public:
     string getName() const { return name; }
     string getID() const { return id; }
     double getInternalGPA() const { return gpa; }
+    string showAllCoursesDetails()const;
 };
 #endif
