@@ -29,9 +29,11 @@ private slots:
 
     void on_deleteBtn_clicked();
 
+    void on_loadCoursesBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
-    GradeManager manager; // العقل المدبر اللي جواه الـ Map
+    GradeManager manager;
     void displayStudentReport(const Student &s);
 };
 #endif // MAINWINDOW_H

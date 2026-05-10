@@ -1,19 +1,19 @@
 #ifndef STUDENT_H
 #define STUDENT_H
-#include <iostream>
 #include <map>
 #include <string>
 #include<list>
 #include<vector>
+#include <QString>
 using namespace std;
 struct CourseInfo {
     string name;
     int credits;
 };
 struct courseDetails{
-    double quiz=0, midterm=0,finalExam=0,bonus=0, activities=0;
+    double midterm=0,finalExam=0, activities=0;
     double totalGrade() const{
-        double total=quiz+midterm+finalExam+bonus+ activities;
+        double total=midterm+finalExam+ activities;
         return (total>100)? 100: total;
     }
 };
@@ -57,5 +57,9 @@ public:
     bool canPromote() const { return getCompletedHoursForLevel(currentLevel) >= 12; // according to courses we put at each level
     }
     void displayGradesByLevel(int level) const;
+
+
+    //inserted cause gui
+    QString showAllCoursesDetails() const;
 };
 #endif

@@ -2,10 +2,8 @@
 #define SYSTEMHANDLER_H
 #include <map>
 #include <vector>
-#include <stack>
-#include <queue>
 #include <string>
-#include "Student.h"
+#include "student.h"
 
 using namespace std;
 class GradeManager {

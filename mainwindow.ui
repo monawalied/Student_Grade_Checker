@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -183,91 +183,38 @@
        <property name="bottomMargin">
         <number>7</number>
        </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_15">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Select the course</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="courseCombo">
-         <item>
+        <widget class="QTableWidget" name="updateTable">
+         <column>
           <property name="text">
-           <string>circuits</string>
+           <string>Subject</string>
           </property>
-         </item>
-         <item>
+         </column>
+         <column>
           <property name="text">
-           <string>electronics</string>
+           <string>Final</string>
           </property>
-         </item>
-         <item>
+         </column>
+         <column>
           <property name="text">
-           <string>control</string>
+           <string>Activities</string>
           </property>
-         </item>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_16">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string> Set score</string>
-         </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Midterm</string>
+          </property>
+         </column>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="gradeValue">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="maximum">
-          <double>100.989999999999995</double>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_17">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
+        <widget class="QPushButton" name="loadCoursesBtn">
          <property name="text">
-          <string>Select category</string>
+          <string>Load Courses</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QComboBox" name="componentCombo">
-         <item>
-          <property name="text">
-           <string>quiz</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>midterm</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>finalExam</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="2">
+       <item row="2" column="0" colspan="2">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <widget class="QPushButton" name="updateGradeBtn">

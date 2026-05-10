@@ -1,5 +1,6 @@
 #include "student.h"
 #include<cmath>
+#include <iostream>
 Student::Student(string name, string id) : name(name), id(id), gpa(0.0) {}
 
 double Student::calculateGPA() const {
@@ -22,10 +23,8 @@ double Student::calculateGPA() const {
 }
 
 void Student::updateGradeAux(string sub, string comp, double val, string admin){
-    if(comp=="quiz")  mainRecords[sub].quiz=val;
     if(comp=="midterm")  mainRecords[sub].midterm=val;
     if(comp=="finalExam")  mainRecords[sub].finalExam=val;
-    if(comp=="bonus")  mainRecords[sub].bonus=val;
     if(comp=="activities")  mainRecords[sub].activities=val;
     history.push_back(sub+ " graded by "+ admin );
     gpa = calculateGPA();
@@ -117,4 +116,15 @@ int Student::calculateLevel()const{
     if (totalHours >= 24) return 3;
     if (totalHours >= 12) return 2;
     return 1;
+}
+
+
+QString Student::showAllCoursesDetails() const {
+    QString details = "";
+    for (const auto& [courseName, record] : mainRecords) {
+        double score = record.totalGrade();
+        details += "<li><b>" + QString::fromStdString(courseName) + "</b>: "
+                   + QString::number(score) + " (" + QString::fromStdString(gradeletter(score)) + ")</li>";
+    }
+    return details;
 }

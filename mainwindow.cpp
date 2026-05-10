@@ -7,29 +7,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->subjCombo->addItem("electronics");
-    ui->subjCombo->addItem("control");
-    ui->subjCombo->addItem("circuits");
+    ui->subjCombo->clear();
 
-    ui->courseCombo->addItem("circuits");
-    ui->courseCombo->addItem("control");
-    ui->courseCombo->addItem("electronics");
-
-    ui->componentCombo->addItem("quiz");
-    ui->componentCombo->addItem("midterm");
-    ui->componentCombo->addItem("finalExam");
-    ui->componentCombo->addItem("bonus");
-    ui->componentCombo->addItem("activities");
-
-    // 2. Set the "Hints"
-    ui->courseCombo->setPlaceholderText("Select a course...");
-    ui->componentCombo->setPlaceholderText("Select a category...");
-    ui->subjCombo->setPlaceholderText("Select a course...");
-
-    // 3. Start empty
-    ui->courseCombo->setCurrentIndex(-1);
-    ui->componentCombo->setCurrentIndex(-1);
-    ui->subjCombo->setCurrentIndex(-1);
+    for (auto const& [levelNum, coursesVector] : Student::levels) {
+        for (const auto& course : coursesVector) {
+            ui->subjCombo->addItem(QString::fromStdString(course.name));
+        }
+    }
 }
 
 MainWindow::~MainWindow()
@@ -55,48 +39,53 @@ void MainWindow::on_addBtn_clicked()
     }
 }
 
-void MainWindow::on_updateGradeBtn_clicked()
-{
-    QString id = ui->idInput_page2->text();
-    QString course = ui->courseCombo->currentText();
-    QString component = ui->componentCombo->currentText();
-    double value = ui->gradeValue->value();
-    if (!id.isEmpty() && course != "Select a course..." && component != "Select a category...") {
-        if (manager.studentExist(id.toStdString())) {
-            manager.updateGrade(id.toStdString(),
-                                course.toStdString(),
-                                component.toStdString(),
-                                value,
-                                "Admin");
+void MainWindow::on_loadCoursesBtn_clicked() {
+    string id = ui->idInput_page2->text().toStdString();
+    if (!manager.studentExist(id)) return;
 
-            Student &s = manager.getStudent(id.toStdString());
-            double newGPA
-                = s.getInternalGPA(); // instead of calling calculate gpa i just fetched it since it's calculated in update grade auto
+    Student& s = manager.getStudent(id);
+    int level = s.getLevel();
+    auto courses = Student::levels[level];
 
-            QMessageBox::information(this,
-                                     "Success",
-                                     "Grade Updated! New GPA for "
-                                         + QString::fromStdString(s.getName())
-                                         + " is: " + QString::number(newGPA));
-
-        } else {
-            QMessageBox::warning(this, "Error", "Student ID not found!");
-        }
-    } else {
-        QMessageBox::warning(this, "Error", "FILL OUT ALL REQUIRED FEILDS!");
+    ui->updateTable->setRowCount(0);
+    for (const auto& course : courses) {
+        int row = ui->updateTable->rowCount();
+        ui->updateTable->insertRow(row);
+        ui->updateTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(course.name)));
     }
-    ui->idInput_page2->clear();
-    ui->courseCombo->setCurrentIndex(-1);    // Resets to placeholder
-    ui->componentCombo->setCurrentIndex(-1); // Resets to placeholder
-    ui->gradeValue->setValue(ui->gradeValue->minimum());
 }
+
+
+void MainWindow::on_updateGradeBtn_clicked() {
+    string id = ui->idInput_page2->text().toStdString();
+
+    for (int i = 0; i < ui->updateTable->rowCount(); ++i) {
+        string course = ui->updateTable->item(i, 0)->text().toStdString();
+
+        double mid = ui->updateTable->item(i, 1) ? ui->updateTable->item(i, 1)->text().toDouble() : 0;
+        double fin = ui->updateTable->item(i, 2) ? ui->updateTable->item(i, 2)->text().toDouble() : 0;
+        double act = ui->updateTable->item(i, 3) ? ui->updateTable->item(i, 3)->text().toDouble() : 0;
+
+        manager.updateGrade(id, course, "midterm", mid, "Admin");
+        manager.updateGrade(id, course, "finalExam", fin, "Admin");
+        manager.updateGrade(id, course, "activities", act, "Admin");
+    }
+
+    Student& s = manager.getStudent(id);
+    QMessageBox::information(this, "Success", "All grades updated! New GPA: " + QString::number(s.calculateGPA()));
+}
+
 void MainWindow::on_chkBtn_clicked()
 {
     QString id = ui->idInput_page3->text();
+
     if (!id.isEmpty()) {
-        bool found = manager.studentExist(id.toStdString());
-        if (found) {
-            displayStudentReport(manager.getStudent(id.toStdString()));
+        string stdID = id.toStdString();
+
+        if (manager.studentExist(stdID)) {
+            Student& s = manager.getStudent(stdID);
+            displayStudentReport(s);
+
         } else {
             QMessageBox::warning(this, "Error", "Student ID not found!");
         }
@@ -105,6 +94,26 @@ void MainWindow::on_chkBtn_clicked()
     }
     ui->idInput_page3->clear();
 }
+
+
+void MainWindow::on_deleteBtn_clicked()
+{
+    QString id = ui->idInput_page3->text();
+    if (!id.isEmpty()) {
+        if (manager.studentExist(id.toStdString())) {
+            manager.deleteStudent(id.toStdString());
+            QString html = "<br>*3";
+            html += "<h2> Student with ID : " + id.toStdString() + " is deleted successfully";
+            html += "</h2>";
+        } else {
+            QMessageBox::warning(this, "Error", "Student ID not found!");
+        }
+    } else {
+        QMessageBox::warning(this, "Error", "ENTER A VALID ID!");
+    }
+}
+
+
 void MainWindow::displayStudentReport(const Student &s)
 {
     // 1. Start the HTML string with some basic CSS styling
@@ -160,20 +169,4 @@ void MainWindow::on_subAvgBtn_clicked()
     ui->subjectAvgReport->setHtml(html);
 }
 
-void MainWindow::on_deleteBtn_clicked()
-{
-    QString id = ui->idInput_page3->text();
-    if (!id.isEmpty()) {
-        if (manager.studentExist(id.toStdString())) {
-            manager.deleteStudent(id.toStdString());
-            QString html = "<br>*3";
-            html += "<h2> Student with ID : " + id.toStdString() + " is deleted successfully";
-            html += "</h2>";
-        } else {
-            QMessageBox::warning(this, "Error", "Student ID not found!");
-        }
-    } else {
-        QMessageBox::warning(this, "Error", "ENTER A VALID ID!");
-    }
-    ui->idInput_page3->clear();
-}
+
