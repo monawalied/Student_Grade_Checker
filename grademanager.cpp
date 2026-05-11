@@ -2,7 +2,6 @@
 #include <iostream>
 #include <algorithm>
 
-
 using namespace std;
 bool GradeManager::studentExist(string id){
     return mainStorage.find(id)!=mainStorage.end();
@@ -15,7 +14,7 @@ void GradeManager::addStudent(string name, string id) {
         systemLog.push_back("System: Registered " + name + id);
     }
     else {
-        cout << "Error: Student with ID " << id << " already exists.\n"; // fix
+        cout << "Error: Student with ID " << id << " already exists.\n";
     }
 }
 void GradeManager::deleteStudent(string id) {
@@ -31,28 +30,54 @@ void GradeManager::deleteStudent(string id) {
 }
 
 void GradeManager::updateGrade(string id,string course, string comp, double val, string admin) {
-    auto it = mainStorage.find(id);
-    if (it != mainStorage.end()) {
-        Student& currentStudent = it->second; // it->first points to the id , ->next points to the student itself
-        currentStudent.updateGradeAux(course, comp,val,admin);
+    if (studentExist(id)) {
+        mainStorage[id].updateGradeAux(course, comp, val, admin);
+        Student& currentStudent =mainStorage[id]; // it->first points to the id , ->next points to the student itself
+        if (currentStudent.canPromote()) {
+            currentStudent.setLevel(currentStudent.getLevel() + 1);
+            systemLog.push_back("System: Student " + id + " promoted to level " + to_string(currentStudent.getLevel()));
+
+        }
         systemLog.push_back( admin+" updated the grade of "+ course+" " + comp +"for "+ id);
+        mainStorage[id].calculateGPA();
+    }
+    else {
+        cout << "Error: Student doesn't exist.\n";
     }
 }
-vector<Student> GradeManager::getTop3Students(){
-    vector<Student> allStudents;
+vector<Student> GradeManager::getTop4Students(){
+    vector<Student> level1_Students;
+    vector<Student> level2_Students;
+    vector<Student> level3_Students;
+    vector<Student> level4_Students;
+
     for (const auto& [id ,student]: mainStorage){
-        allStudents.push_back(student);
+        if(student.getLevel()==1) level1_Students.push_back(student);
+        if(student.getLevel()==2) level2_Students.push_back(student);
+        if(student.getLevel()==3) level3_Students.push_back(student);
+        if(student.getLevel()==4) level4_Students.push_back(student);
     }
 
-    // more examples about this exist in templates lab
-    sort(allStudents.begin(), allStudents.end(), [](const Student &a, const Student &b) {
-        return a.calculateGPA() > b.calculateGPA();
-    });
-    vector<Student> top_3;
-    for (size_t i = 0; i < 3 && i < allStudents.size(); i++)
-        top_3.push_back(allStudents[i]);
 
-    return top_3;
+    sort(level1_Students.begin(), level1_Students.end(), [](const Student &a, const Student &b) {
+        return a.calculateGPA() > b.calculateGPA(); });
+
+    sort(level2_Students.begin(), level2_Students.end(), [](const Student &a, const Student &b) {
+        return a.calculateGPA() > b.calculateGPA(); });
+
+    sort(level3_Students.begin(), level3_Students.end(), [](const Student &a, const Student &b) {
+        return a.calculateGPA() > b.calculateGPA(); });
+
+    sort(level4_Students.begin(), level4_Students.end(), [](const Student &a, const Student &b) {
+        return a.calculateGPA() > b.calculateGPA(); });
+
+    vector<Student> top_4;
+    if (!level1_Students.empty()) top_4.push_back(level1_Students[0]);
+    if (!level2_Students.empty()) top_4.push_back(level2_Students[0]);
+    if (!level3_Students.empty()) top_4.push_back(level3_Students[0]);
+    if (!level4_Students.empty()) top_4.push_back(level4_Students[0]);
+
+    return top_4;
 }
 Student& GradeManager::getStudent(string id) {
     return mainStorage.at(id);
@@ -71,7 +96,7 @@ string GradeManager::getSubjectAverage(string subject) {
     }
 
     if (totalStudents) average= totalGrades/totalStudents;
-    else  return"EMPTY";
+    else  return "None of the students registered for " + subject + " yet";
     cout<< "Average of "<< subject<<" is ";
     return (avgGradeletter(average));
 

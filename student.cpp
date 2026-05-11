@@ -1,39 +1,26 @@
 #include "student.h"
 #include<cmath>
-#include <iostream>
-using namespace std;
-
 Student::Student(string name, string id) : name(name), id(id), gpa(0.0) {}
 
-double Student:: calculateGPA() const {
+double Student::calculateGPA() const {
     double totalPoints = 0;
     int totalChrs = 0;
-    for (const auto& [subName, record] : mainRecords) {
-        // Check if the subject exists in our credit hour registry
-        if (credithrs.count(subName)) {
-            string letter=gradeletter(record.totalGrade());
-            double points=letterToPoints(letter);
-            int ch = credithrs[subName];
-            totalPoints += points * ch;
-            totalChrs += ch;
+    //We look through all levels (1, 2, 3, 4)
+    for (const auto& [levelNum, coursesInLevel] : levels) {
+        for (const auto& course : coursesInLevel) {
+            if (mainRecords.count(course.name)) {
+                double score = mainRecords.at(course.name).totalGrade();
+                double points = letterToPoints(gradeletter(score));
+                totalPoints += (points * course.credits);
+                totalChrs += course.credits;
+            }
         }
     }
-    double GPA;
-
     if (totalChrs == 0) return 0.0;
-    GPA=  totalPoints / totalChrs;
-    //3.786 -> 378.6 -> 379.0 -> 3.79
-    //why this? one of the test cases was 3.8756 which is not preferred and the actual GPA not like that
+    double GPA = totalPoints / totalChrs;
     return round(GPA * 100.0) / 100.0;
 }
 
-/*
-void Student::updateGradeAux(string subname, double grade) {
-        grades[subname] = grade;
-        gpa = calculateGPA(); // Update internal GPA immediately
-    }
-*/
-// double quiz=0, midterm=0,finalExam=0,bonus=0, activities=0;
 void Student::updateGradeAux(string sub, string comp, double val, string admin){
     if(comp=="quiz")  mainRecords[sub].quiz=val;
     if(comp=="midterm")  mainRecords[sub].midterm=val;
@@ -45,7 +32,7 @@ void Student::updateGradeAux(string sub, string comp, double val, string admin){
 }
 
 void Student::display() const {
-    cout << "ID: " << id << " | Name: " << name << " | GPA: " << gpa << endl;
+    cout << "ID: " << id << " | Name: " << name <<" | Level " << getLevel()<<  " | GPA: " << gpa << endl;
 }
 
 double Student::getGradeFor(string subject) const {
@@ -90,12 +77,44 @@ double Student::letterToPoints(string letter) const {
 
     return 0.0;
 }
-string Student::showAllCoursesDetails()const{
-    string text;
-    for (const auto& [subName, record] : mainRecords) {
-    text+="<li>" + subName + " : " +
-                gradeletter(record.totalGrade()) + "%</li>";
+int Student::getCompletedHoursForLevel(int level) const {
+    int total = 0;
+    if (levels.count(level)) {
+        for (const auto& course : levels.at(level)) {
+            if (mainRecords.count(course.name)) {
+                if (mainRecords.at(course.name).totalGrade() >= 60) {
+                    total += course.credits;
+                }
+            }
+        }
+    }
+    return total;
+}
+void Student::displayGradesByLevel(int level) const {
+    cout << "Level " << level << " Grades for " << name << " ---" << endl;
+    bool found = false;
+
+    if (levels.count(level)) {
+        for (const auto& course :levels.at(level)) {
+            if (mainRecords.count(course.name)) {
+                double score = mainRecords.at(course.name).totalGrade();
+                cout << course.name << ": " << score << " (" << gradeletter(score) << ")" << endl;
+                found = true;
+            }
+        }
     }
 
-    return text;
+    if (!found) cout << "No records found for this level." << endl;
+    cout << "Total Hours Completed in Level " << level << ": "
+         << getCompletedHoursForLevel(level) << "/12" << endl;
+}
+int Student::calculateLevel()const{
+    int totalHours = 0;
+    for (const auto& [lvl, courses] : levels) {
+        totalHours += getCompletedHoursForLevel(lvl);
+    }
+    if (totalHours >= 36) return 4;
+    if (totalHours >= 24) return 3;
+    if (totalHours >= 12) return 2;
+    return 1;
 }

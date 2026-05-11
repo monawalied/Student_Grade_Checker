@@ -2,9 +2,10 @@
 #define SYSTEMHANDLER_H
 #include <map>
 #include <vector>
+#include <stack>
+#include <queue>
 #include <string>
-#include <list>
-#include "student.h"
+#include "Student.h"
 
 using namespace std;
 class GradeManager {
@@ -16,8 +17,7 @@ public:
     void addStudent(string name, string id);
     void deleteStudent(string id);
     void updateGrade(string id,string sub, string comp, double val, string admin);
-
-    vector<Student> getTop3Students();
+    vector<Student> getTop4Students();
     Student& getStudent(string id);
     string getSubjectAverage(string subject) ;
     string avgGradeletter(double grade) const;
