@@ -35,5 +35,6 @@ private:
     Ui::MainWindow *ui;
     GradeManager manager;
     void displayStudentReport(const Student &s);
+
 };
 #endif // MAINWINDOW_H

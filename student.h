@@ -57,6 +57,9 @@ public:
     bool canPromote() const { return getCompletedHoursForLevel(currentLevel) >= 12; // according to courses we put at each level
     }
     void displayGradesByLevel(int level) const;
+    courseDetails getRecord(string courseName) {
+        return mainRecords[courseName];
+    }
 
 
     //inserted cause gui

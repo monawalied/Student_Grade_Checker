@@ -12,7 +12,7 @@ private:
     list<string> systemLog;  // LINKED LIST: Global system history
 public:
     bool studentExist(string id);
-    void addStudent(string name, string id);
+    void addStudent(string name, string id,int level);
     void deleteStudent(string id);
     void updateGrade(string id,string sub, string comp, double val, string admin);
     vector<Student> getTop4Students();

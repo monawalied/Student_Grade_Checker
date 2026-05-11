@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QMessageBox>
 #include "ui_mainwindow.h"
+#include <QComboBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 }
 
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -25,17 +27,21 @@ void MainWindow::on_addBtn_clicked()
 {
     QString name = ui->nameInput->text();
     QString id = ui->idInput_page1->text();
+    int selectedLevel = ui->levelCombo->currentText().toInt(); // From your new ComboBox
 
     if (!name.isEmpty() && !id.isEmpty()) {
-        manager.addStudent(
-            name.toStdString(),
-            id.toStdString()); //tostdstring converts the Qt-specific string into a format your Student constructor understands
+        manager.addStudent(name.toStdString(), id.toStdString(), selectedLevel);
+
         int row = ui->studentTable->rowCount();
         ui->studentTable->insertRow(row);
         ui->studentTable->setItem(row, 0, new QTableWidgetItem(name));
         ui->studentTable->setItem(row, 1, new QTableWidgetItem(id));
+        ui->studentTable->setItem(row, 2, new QTableWidgetItem(QString::number(selectedLevel)));
+
+        // Clear only the registration inputs
         ui->nameInput->clear();
         ui->idInput_page1->clear();
+
     }
 }
 
@@ -44,14 +50,19 @@ void MainWindow::on_loadCoursesBtn_clicked() {
     if (!manager.studentExist(id)) return;
 
     Student& s = manager.getStudent(id);
-    int level = s.getLevel();
-    auto courses = Student::levels[level];
+    auto courses = Student::levels[s.getLevel()];
 
     ui->updateTable->setRowCount(0);
     for (const auto& course : courses) {
         int row = ui->updateTable->rowCount();
         ui->updateTable->insertRow(row);
         ui->updateTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(course.name)));
+
+
+        courseDetails details = s.getRecord(course.name);
+        ui->updateTable->setItem(row, 1, new QTableWidgetItem(QString::number(details.midterm)));
+        ui->updateTable->setItem(row, 2, new QTableWidgetItem(QString::number(details.finalExam)));
+        ui->updateTable->setItem(row, 3, new QTableWidgetItem(QString::number(details.activities)));
     }
 }
 
