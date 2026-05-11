@@ -82,7 +82,7 @@ void MainWindow::on_updateGradeBtn_clicked() {
         manager.updateGrade(id, course, "activities", act, "Admin");
     }
 
-    QMessageBox::information(this, "Success", "Grades updated");
+    QMessageBox::information(this, "Success", "Grades are updated successfully! ");
 }
 
 void MainWindow::on_chkBtn_clicked()

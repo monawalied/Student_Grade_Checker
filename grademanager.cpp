@@ -12,7 +12,7 @@ void GradeManager::addStudent(string name, string id,int level) {
         mainStorage[id] = Student(name, id);
         mainStorage[id].setLevel(level);
         cout << "Student added successfully.\n";
-       systemLog.push_back("System: Registered " + name + " at Level " + to_string(level));
+        systemLog.push_back("System: Registered " + name + " at Level " + to_string(level));
     }
     else {
         cout << "Error: Student with ID " << id << " already exists.\n";

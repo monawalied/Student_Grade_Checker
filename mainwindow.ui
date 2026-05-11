@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -105,7 +105,7 @@
        <item row="0" column="1">
         <widget class="QLineEdit" name="nameInput">
          <property name="text">
-          <string>dr_ahmed</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -124,7 +124,7 @@
        <item row="1" column="1">
         <widget class="QLineEdit" name="idInput_page1">
          <property name="text">
-          <string>prof1</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -290,7 +290,7 @@
        <item>
         <widget class="QLineEdit" name="idInput_page2">
          <property name="text">
-          <string>2400418</string>
+          <string/>
          </property>
         </widget>
        </item>
