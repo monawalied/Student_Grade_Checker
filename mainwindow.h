@@ -6,7 +6,9 @@
 #include "student.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui {
+class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -23,10 +25,6 @@ private slots:
 
     void on_chkBtn_clicked();
 
-    void on_pushButton_clicked();
-
-    void on_pushButton_3_clicked();
-
     void on_subAvgBtn_clicked();
 
     void on_deleteBtn_clicked();
@@ -34,6 +32,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     GradeManager manager; // العقل المدبر اللي جواه الـ Map
-    void displayStudentReport(const Student& s);
+    void displayStudentReport(const Student &s);
 };
 #endif // MAINWINDOW_H
