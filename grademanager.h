@@ -13,7 +13,7 @@ public:
     bool studentExist(string id);
     void addStudent(string name, string id,int level);
     void deleteStudent(string id);
-    void updateGrade(string id,string sub, string comp, double val, string admin);
+    void updateGrade(string id,string sub, string comp, double val);
     Student& getStudent(string id);
     string getSubjectAverage(string subject) ;
     string avgGradeletter(double grade) const;

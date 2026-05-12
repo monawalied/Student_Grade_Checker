@@ -42,7 +42,7 @@ public:
     // Default constructor
     Student() : name(""), id(""), gpa(0.0) {}
     double calculateGPA() const;
-    void updateGradeAux(string sub, string comp, double val, string admin);// i add admin and make the course updated according to its component (quiz , mid,..)
+    void updateGradeAux(string sub, string comp, double val);
     void display() const;
     double getGradeFor(string subject)const;
     string gradeletter(double grade) const;

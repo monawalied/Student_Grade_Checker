@@ -22,11 +22,11 @@ double Student::calculateGPA() const {
     return round(GPA * 100.0) / 100.0;
 }
 
-void Student::updateGradeAux(string sub, string comp, double val, string admin){
+void Student::updateGradeAux(string sub, string comp, double val){
     if(comp=="midterm")  mainRecords[sub].midterm=val;
     if(comp=="finalExam")  mainRecords[sub].finalExam=val;
     if(comp=="activities")  mainRecords[sub].activities=val;
-    history.push_back(sub+ " graded by "+ admin );
+    history.push_back(sub+ " graded by " );
     gpa = calculateGPA();
 }
 

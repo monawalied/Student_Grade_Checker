@@ -1,6 +1,6 @@
 #include "grademanager.h"
 #include <iostream>
-#include <algorithm>
+
 
 using namespace std;
 bool GradeManager::studentExist(string id){
@@ -30,16 +30,16 @@ void GradeManager::deleteStudent(string id) {
     }
 }
 
-void GradeManager::updateGrade(string id,string course, string comp, double val, string admin) {
+void GradeManager::updateGrade(string id,string course, string comp, double val) {
     if (studentExist(id)) {
-        mainStorage[id].updateGradeAux(course, comp, val, admin);
+        mainStorage[id].updateGradeAux(course, comp, val);
         Student& currentStudent =mainStorage[id]; // it->first points to the id , ->next points to the student itself
         if (currentStudent.canPromote()) {
             currentStudent.setLevel(currentStudent.getLevel() + 1);
             systemLog.push_back("System: Student " + id + " promoted to level " + to_string(currentStudent.getLevel()));
 
         }
-        systemLog.push_back( admin+" updated the grade of "+ course+" " + comp +"for "+ id);
+        systemLog.push_back(" updated the grade of "+ course+" " + comp +"for "+ id);
         mainStorage[id].calculateGPA();
     }
     else {

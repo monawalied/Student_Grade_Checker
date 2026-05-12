@@ -82,9 +82,9 @@ void MainWindow::on_updateGradeBtn_clicked() {
             double fin = ui->updateTable->item(i, 2) ? ui->updateTable->item(i, 2)->text().toDouble() : 0;
             double act = ui->updateTable->item(i, 3) ? ui->updateTable->item(i, 3)->text().toDouble() : 0;
 
-            manager.updateGrade(id, course, "midterm", mid, "Admin");
-            manager.updateGrade(id, course, "finalExam", fin, "Admin");
-            manager.updateGrade(id, course, "activities", act, "Admin");
+            manager.updateGrade(id, course, "midterm", mid);
+            manager.updateGrade(id, course, "finalExam", fin);
+            manager.updateGrade(id, course, "activities", act);
         }
 
         QMessageBox::information(this, "Success", "Grades are updated successfully! ");
