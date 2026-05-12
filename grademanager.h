@@ -1,7 +1,6 @@
 #ifndef SYSTEMHANDLER_H
 #define SYSTEMHANDLER_H
 #include <map>
-#include <vector>
 #include <string>
 #include "student.h"
 
@@ -15,7 +14,6 @@ public:
     void addStudent(string name, string id,int level);
     void deleteStudent(string id);
     void updateGrade(string id,string sub, string comp, double val, string admin);
-    vector<Student> getTop4Students();
     Student& getStudent(string id);
     string getSubjectAverage(string subject) ;
     string avgGradeletter(double grade) const;

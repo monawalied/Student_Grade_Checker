@@ -46,40 +46,7 @@ void GradeManager::updateGrade(string id,string course, string comp, double val,
         cout << "Error: Student doesn't exist.\n";
     }
 }
-vector<Student> GradeManager::getTop4Students(){
-    vector<Student> level1_Students;
-    vector<Student> level2_Students;
-    vector<Student> level3_Students;
-    vector<Student> level4_Students;
 
-    for (const auto& [id ,student]: mainStorage){
-        if(student.getLevel()==1) level1_Students.push_back(student);
-        if(student.getLevel()==2) level2_Students.push_back(student);
-        if(student.getLevel()==3) level3_Students.push_back(student);
-        if(student.getLevel()==4) level4_Students.push_back(student);
-    }
-
-
-    sort(level1_Students.begin(), level1_Students.end(), [](const Student &a, const Student &b) {
-        return a.calculateGPA() > b.calculateGPA(); });
-
-    sort(level2_Students.begin(), level2_Students.end(), [](const Student &a, const Student &b) {
-        return a.calculateGPA() > b.calculateGPA(); });
-
-    sort(level3_Students.begin(), level3_Students.end(), [](const Student &a, const Student &b) {
-        return a.calculateGPA() > b.calculateGPA(); });
-
-    sort(level4_Students.begin(), level4_Students.end(), [](const Student &a, const Student &b) {
-        return a.calculateGPA() > b.calculateGPA(); });
-
-    vector<Student> top_4;
-    if (!level1_Students.empty()) top_4.push_back(level1_Students[0]);
-    if (!level2_Students.empty()) top_4.push_back(level2_Students[0]);
-    if (!level3_Students.empty()) top_4.push_back(level3_Students[0]);
-    if (!level4_Students.empty()) top_4.push_back(level4_Students[0]);
-
-    return top_4;
-}
 Student& GradeManager::getStudent(string id) {
     return mainStorage.at(id);
 }

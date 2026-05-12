@@ -25,7 +25,7 @@ private:
     double gpa = 0.0;
     map <string, courseDetails> mainRecords;
     list<string> history;
-    int currentLevel = 1;
+    int currentLevel=1 ;
 
 public:
     // Static ensures this map is shared by ALL students (saves memory)

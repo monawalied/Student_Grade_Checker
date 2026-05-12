@@ -74,7 +74,7 @@
         <x>10</x>
         <y>70</y>
         <width>453</width>
-        <height>161</height>
+        <height>164</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -105,7 +105,7 @@
        <item row="0" column="1">
         <widget class="QLineEdit" name="nameInput">
          <property name="text">
-          <string/>
+          <string>dr_ahmed</string>
          </property>
         </widget>
        </item>
@@ -122,7 +122,11 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="idInput_page1"/>
+        <widget class="QLineEdit" name="idInput_page1">
+         <property name="text">
+          <string>prof1</string>
+         </property>
+        </widget>
        </item>
        <item row="5" column="0" colspan="2">
         <layout class="QHBoxLayout" name="horizontalLayout"/>
@@ -284,7 +288,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="idInput_page2"/>
+        <widget class="QLineEdit" name="idInput_page2">
+         <property name="text">
+          <string>2400418</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

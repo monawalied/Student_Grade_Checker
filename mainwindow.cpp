@@ -82,8 +82,7 @@ void MainWindow::on_updateGradeBtn_clicked() {
         manager.updateGrade(id, course, "activities", act, "Admin");
     }
 
-    Student& s = manager.getStudent(id);
-    QMessageBox::information(this, "Success", "All grades updated! New GPA: " + QString::number(s.calculateGPA()));
+    QMessageBox::information(this, "Success", "Grades updated");
 }
 
 void MainWindow::on_chkBtn_clicked()
