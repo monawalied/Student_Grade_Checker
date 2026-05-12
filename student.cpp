@@ -121,6 +121,7 @@ int Student::calculateLevel()const{
 
 QString Student::showAllCoursesDetails() const {
     QString details = "";
+    // Iterates through every subject ever graded for this student
     for (const auto& [courseName, record] : mainRecords) {
         double score = record.totalGrade();
         details += "<li><b>" + QString::fromStdString(courseName) + "</b>: "

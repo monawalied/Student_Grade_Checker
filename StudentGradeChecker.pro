@@ -15,8 +15,7 @@ SOURCES += \
 HEADERS += \
     grademanager.h \
     mainwindow.h \
-    student.h \
-    user.h
+    student.h
 
 FORMS += \
     mainwindow.ui

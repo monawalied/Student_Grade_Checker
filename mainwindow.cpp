@@ -47,42 +47,51 @@ void MainWindow::on_addBtn_clicked()
 
 void MainWindow::on_loadCoursesBtn_clicked() {
     string id = ui->idInput_page2->text().toStdString();
-    if (!manager.studentExist(id)) return;
+    if (manager.studentExist(id)){
 
-    Student& s = manager.getStudent(id);
-    auto courses = Student::levels[s.getLevel()];
+        Student& s = manager.getStudent(id);
+        auto courses = Student::levels[s.getLevel()];
 
-    ui->updateTable->setRowCount(0);
-    for (const auto& course : courses) {
-        int row = ui->updateTable->rowCount();
-        ui->updateTable->insertRow(row);
-        ui->updateTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(course.name)));
+        ui->updateTable->setRowCount(0);
+        for (const auto& course : courses) {
+            int row = ui->updateTable->rowCount();
+            ui->updateTable->insertRow(row);
+            ui->updateTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(course.name)));
 
 
-        courseDetails details = s.getRecord(course.name);
-        ui->updateTable->setItem(row, 1, new QTableWidgetItem(QString::number(details.midterm)));
-        ui->updateTable->setItem(row, 2, new QTableWidgetItem(QString::number(details.finalExam)));
-        ui->updateTable->setItem(row, 3, new QTableWidgetItem(QString::number(details.activities)));
+            courseDetails details = s.getRecord(course.name);
+            ui->updateTable->setItem(row, 1, new QTableWidgetItem(QString::number(details.midterm)));
+            ui->updateTable->setItem(row, 2, new QTableWidgetItem(QString::number(details.finalExam)));
+            ui->updateTable->setItem(row, 3, new QTableWidgetItem(QString::number(details.activities)));
+        }
+    }
+    else{
+        QMessageBox::warning(this, "Error", "Student ID not found!");
     }
 }
 
 
 void MainWindow::on_updateGradeBtn_clicked() {
     string id = ui->idInput_page2->text().toStdString();
+    if(manager.studentExist(id)){
 
-    for (int i = 0; i < ui->updateTable->rowCount(); ++i) {
-        string course = ui->updateTable->item(i, 0)->text().toStdString();
+        for (int i = 0; i < ui->updateTable->rowCount(); ++i) {
+            string course = ui->updateTable->item(i, 0)->text().toStdString();
 
-        double mid = ui->updateTable->item(i, 1) ? ui->updateTable->item(i, 1)->text().toDouble() : 0;
-        double fin = ui->updateTable->item(i, 2) ? ui->updateTable->item(i, 2)->text().toDouble() : 0;
-        double act = ui->updateTable->item(i, 3) ? ui->updateTable->item(i, 3)->text().toDouble() : 0;
+            double mid = ui->updateTable->item(i, 1) ? ui->updateTable->item(i, 1)->text().toDouble() : 0;
+            double fin = ui->updateTable->item(i, 2) ? ui->updateTable->item(i, 2)->text().toDouble() : 0;
+            double act = ui->updateTable->item(i, 3) ? ui->updateTable->item(i, 3)->text().toDouble() : 0;
 
-        manager.updateGrade(id, course, "midterm", mid, "Admin");
-        manager.updateGrade(id, course, "finalExam", fin, "Admin");
-        manager.updateGrade(id, course, "activities", act, "Admin");
+            manager.updateGrade(id, course, "midterm", mid, "Admin");
+            manager.updateGrade(id, course, "finalExam", fin, "Admin");
+            manager.updateGrade(id, course, "activities", act, "Admin");
+        }
+
+        QMessageBox::information(this, "Success", "Grades are updated successfully! ");
     }
-
-    QMessageBox::information(this, "Success", "Grades are updated successfully! ");
+    else{
+        QMessageBox::warning(this, "Error", "Student ID not found!");
+    }
 }
 
 void MainWindow::on_chkBtn_clicked()
@@ -95,16 +104,13 @@ void MainWindow::on_chkBtn_clicked()
         if (manager.studentExist(stdID)) {
             Student& s = manager.getStudent(stdID);
             displayStudentReport(s);
-
         } else {
             QMessageBox::warning(this, "Error", "Student ID not found!");
         }
     } else {
-        QMessageBox::warning(this, "Error", "ENTER A VALID ID!");
+        QMessageBox::warning(this, "Error", "Please enter a valid ID!");
     }
-    ui->idInput_page3->clear();
 }
-
 
 void MainWindow::on_deleteBtn_clicked()
 {
@@ -126,30 +132,30 @@ void MainWindow::on_deleteBtn_clicked()
 
 void MainWindow::displayStudentReport(const Student &s)
 {
-    // 1. Start the HTML string with some basic CSS styling
-    QString html = "<div style='font-family: Arial; color:  #FFFFFF;'>";
+    // Start the HTML with some styling for the white background
+    QString html = "<div style='font-family: Arial; color: #000000; padding: 10px;'>";
 
-    // 2. Add a Header
-    html += "<h2 style='color: #2980b9;'>Student Academic Record</h2>";
+    // 1. Header Information
+    html += "<h2 style='color: #2980b9;'>Full Academic Transcript</h2>";
     html += "<p><b>Name:</b> " + QString::fromStdString(s.getName()) + "<br>";
-    html += "<b>ID:</b> " + QString::fromStdString(s.getID()) + "</p>";
+    html += "<b>ID:</b> " + QString::fromStdString(s.getID()) + "<br>";
+    html += "<b>Current Academic Level:</b> " + QString::number(s.getLevel()) + "</p>";
 
-    // 3. Highlight the GPA with a color
-    QString gpaColor = (s.getInternalGPA() >= 3.0) ? "#27ae60" : "#e67e22";
-    html += "<h3 style='color: " + gpaColor
-            + ";'>Current GPA: " + QString::number(s.getInternalGPA()) + "</h3>";
+    // 2. GPA Display
+    html += "<h3 style='color: #27ae60;'>Cumulative GPA: " + QString::number(s.getInternalGPA()) + "</h3>";
+    html += "<hr>";
 
-    html += "<hr><p><b>Course Breakdown:</b></p><ul>";
+    // 3. The Core History: Loop through EVERY course ever taken
+    html += "<h4>Course History:</h4><ul>";
 
-    // 4. (Logic needed) Loop through your courses here to add list items
+    // This is the key: s.showAllCoursesDetails() pulls everything from the map
     html += s.showAllCoursesDetails();
 
     html += "</ul></div>";
 
-    // 5. Send the HTML to the Text Edit
+    // 4. Update the actual UI element (make sure the object name is correct)
     ui->studDisplayReport->setHtml(html);
 }
-
 void MainWindow::on_subAvgBtn_clicked()
 {
     QString subject = ui->subjCombo->currentText();
